@@ -1,0 +1,17 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.customOverlay {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px); /* Adjust the blur value to your preference */
+}
+
+.customModel{
+  background-color: #FEF7F6;
+  max-width: 510px;
+  backdrop-filter: blur(0px);
+  margin:0 auto;
+  width:100%;
+  border-radius: 10px;
+}

@@ -1,22 +1,11 @@
-import React from "react";
-import Modal from "react-modal";
+import React from 'react'
 
-const LocationPrompt = () => {
-  const [open , setIsOpen] = React.useState(false);
-
-  React.useEffect(()=>{
-    setIsOpen(!open)
-
-  }
-  ,[localStorage.getItem("latitude")]
+export const Modal = () => {
+  return (
+    <div className='fixed inset-0 backdrop-blur-sm bg-black bg-opacity-25'>
+       <div className='flex justify-center absolute bottom-0 w-full h-fit'>
+          <h1>Modal</h1>
+       </div>
+    </div>
   )
-
-
-   
-  return <Modal isOpen={open}>
-       <h3>Enable Location</h3>
-       <input placeholder="Enter City"/>
-  </Modal>;
-};
-
-export default LocationPrompt;
+}

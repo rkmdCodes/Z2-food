@@ -1,12 +1,12 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Header from "../header/page";
-import axios from "axios";
 import { db } from '@/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import Carousl from "../carousel/page";
-import LocationPrompt from "../modal/page";
+import { DataContext } from "../context/page";
+import Outlets from "../outlets/page";
 
 const api_key = "181256ee-689d-41bb-960c-75cad0c4644f";
 async function getDistance(lat1, lon1, lat2, lon2) {
@@ -15,14 +15,14 @@ async function getDistance(lat1, lon1, lat2, lon2) {
   const data = await response.json();
   console.log(data);
   const distance = data.paths[0].distance;
-  
   return distance/1000;
 }
 
 
 
 const Container = () => {
-  const [data, setData] = React.useState([]);
+  const {outlets , setOutlets} = useContext(DataContext);
+  const {address}  = useContext(DataContext);
   let lat = localStorage.getItem("lat");
   let lon = localStorage.getItem("lon");
   const buttonRef = doc(db, 'outlet', 'Delhi');
@@ -44,7 +44,7 @@ const Container = () => {
             filteredData.push(da[i]);
           }
         }
-        setData(filteredData); // Update the state with the filtered data here
+        setOutlets(()=>[...filteredData]); // Update the state with the filtered data here
         console.log('Button document data:', filteredData);
       } else {
         console.log('Button document not found!');
@@ -53,6 +53,10 @@ const Container = () => {
       console.error('Error fetching button data:', error);
     }
   };
+
+  useEffect(()=>{
+    fetchData();
+  },[address]);
 
 // fetchData();
 
@@ -87,6 +91,7 @@ const Container = () => {
     <div>
        <Header/>
        <Carousl/>
+       <Outlets/>
        <button onClick={()=>fetchData()}> Fetch</button>
     </div>
   );
