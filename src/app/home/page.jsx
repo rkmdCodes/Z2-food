@@ -88,7 +88,7 @@ const Container = () => {
       <button onClick={()=>fetchData()}>Add</button>
     </>*/
   return (
-    <div>
+    <div className="m-1.5 font-Jost tracking-widest">
        <Header/>
        <Carousl/>
        <Outlets/>

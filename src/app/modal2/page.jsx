@@ -1,18 +1,28 @@
 "use client";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import "../modal2/modal2.css";
 import { DataContext } from "../context/page";
 import Img from "@/app/output-onlinepngtools.png";
-
+  
 const Modal2 = () => {
   const { address, setAddress } = useContext(DataContext);
-  const [open, setOpen] = useState(false);
+  const {open, setOpen} = useContext(DataContext);
+  
   const { suggestions, setSuggestions } = useContext(DataContext);
 
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
+
+   useEffect(()=>{
+
+    if(localStorage.getItem("lat"))
+    {
+      setOpen(false);
+    }
+
+   },[address])
 
   const suggestCities = (cityInput) => {
     fetch(
@@ -59,13 +69,16 @@ const Modal2 = () => {
             );
             setAddress(data.results[0].county + " " + data.results[0].state);
             //setAddress(data.address)
+            if(!address)setOpen(false)
+            else 
+              {alert(`${address}`)}
           },
           (error) => {
             alert(error.message);
           }
         );
     });
-    setOpen(false);
+   
   }
 
   const handleSuggestionsClick = (address, lat, lon) => {
@@ -79,7 +92,7 @@ const Modal2 = () => {
 
   return (
     <div>
-      <button onClick={onOpenModal}>Open modal</button>
+  {/* <button onClick={onOpenModal}>Open modal</button> */}
       <Modal
         open={open}
         onClose={onCloseModal}
