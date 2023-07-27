@@ -1,30 +1,33 @@
-import React from 'react'
+import React from "react";
 
-const Outlet = () => {
-  let name = "Brik Oven..";
-  let distance = "4.7 km";
-  let cuisine  = "Indian";
-  let imgUrl = "/assets/dummyOutlet.jpg";
-  return (
-    
-    <div className='flex flex-col gap-2'>
-         <div >
-             <img className = "rounded-lg" src={imgUrl}/>
-         </div>
-         <div>
-              <div className='font-semibold text-base'>
-                {name}
-              </div>
-              <div>
-                 <div className='flex gap-1 text-[#A7A7A7]'>
-                      <div>{distance}</div>
-                      <div>·</div>
-                      <div>{cuisine}</div>
-                 </div>
-              </div>
-         </div>
-         </div>
-  )
+function formatString(str, len) {
+  if (str && str.length >= len) {
+    return str.substr(0, 17) + "...";
+  } else {
+    return str;
+  }
 }
 
-export default Outlet
+
+const Outlet = ({ imgUrl, name, distance, cuisine }) => {
+  distance = distance?.toFixed(1) + " km";
+  return (
+    <div className="flex flex-col gap-2">
+      <div className=" ">
+        <img className="rounded-lg h-full" src={imgUrl} />
+      </div>
+      <div>
+        <div className="font-semibold text-base">{formatString(name, 20)}</div>
+        <div>
+          <div className="flex gap-1 text-[#A7A7A7]">
+            <div>{distance}</div>
+            <div>·</div>
+            <div>{cuisine}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Outlet;

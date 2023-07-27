@@ -1,9 +1,40 @@
-import React, { useContext } from "react";
+import React, {useEffect, useState,useContext } from "react";
 import { DataContext } from "../context/page";
 
+function formatString(str , len) {
+  if ( str && str.length >= len ){
+    return str.substr(0, 14) + '..';
+  } else {
+    return str;
+  }
+}
+
 const Header = () => {
-  const { address } = useContext(DataContext);
-  const { suggestions, setSuggestions } = useContext(DataContext);
+  const { address ,outlets,setOutlets,suggestions,setSearchResult,searchResult, setOpen} = useContext(DataContext);
+  const [searchQuery, setSearchQuery] = useState("");
+ 
+  useEffect(() => {
+    // This useEffect will be called whenever 'outlets' changes
+    console.log("outlets is ", outlets);
+    setSearchResult([...outlets]);
+    console.log("searchResult is ", searchResult);
+  }, [outlets]);
+
+  const handleSearch = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Filter outlets based on the search query for 'name' and 'cuisine' fields
+    const filteredOutlets = query
+      ? outlets.filter(
+          (outlet) =>
+            outlet.name.toLowerCase().includes(query.toLowerCase()) ||
+            outlet.cuisine.toLowerCase().includes(query.toLowerCase())
+        )
+      : outlets;
+
+    setSearchResult(filteredOutlets);
+  };
 
   let local_lat = localStorage.getItem("lat"),
     local_long = localStorage.getItem("lon");
@@ -87,10 +118,46 @@ const Header = () => {
         </>
       )} */
 
+  /* <div className="">
+                <img
+                  src={
+                    "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"
+                  }
+                />
+              </div> */
+
   return (
     <>
       <div className="sticky top-0 z-10 flex flex-col bg-white mt-0 pt-4 mb-3.5 pb-1 gap-4">
-        <div>
+        <div className="flex justify-between">
+          <div >
+            <div className="flex text-[#A7A7A7] font-Jost">Pickup Now</div>
+            <div className="flex gap-2">
+              <div className="text-base font-semibold">{formatString(address,16)}</div>
+              <div onClick={()=>setOpen(true)}>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g mask="url(#mask0_2_211)">
+                    <path
+                      d="M12 14.95C11.8667 14.95 11.7417 14.9292 11.625 14.8875C11.5084 14.8458 11.4 14.775 11.3 14.675L6.67503 10.05C6.4917 9.86667 6.4042 9.63751 6.41253 9.36251C6.42086 9.08751 6.5167 8.85834 6.70003 8.67501C6.88336 8.49167 7.1167 8.40001 7.40003 8.40001C7.68336 8.40001 7.9167 8.49167 8.10003 8.67501L12 12.575L15.925 8.65001C16.1084 8.46667 16.3375 8.37917 16.6125 8.38751C16.8875 8.39584 17.1167 8.49167 17.3 8.67501C17.4834 8.85834 17.575 9.09167 17.575 9.37501C17.575 9.65834 17.4834 9.89167 17.3 10.075L12.7 14.675C12.6 14.775 12.4917 14.8458 12.375 14.8875C12.2584 14.9292 12.1334 14.95 12 14.95Z"
+                      fill="#10100E"
+                    />
+                  </g>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div> 
+             <img src={ "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"}/>
+          </div>
+        </div>
+
+        {   /*<div className="flex flex-col">
           <div className="flex text-[#A7A7A7] font-Jost">Pickup Now</div>
           <div className="flex  text-black text-md font-Jost">
             <div className="flex justify-between w-full">
@@ -113,16 +180,17 @@ const Header = () => {
                   </svg>
                 </div>
               </div>
-              <div className="">
-                <img
-                  src={
-                    "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"
-                  }
-                />
-              </div>
-            </div>
+  </div>
           </div>
-        </div>
+
+          <div className="">
+            <img
+              src={
+                "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"
+              }
+            />
+          </div>
+        </div>*/}
         <div className="flex bg-[#F2F2F2] pl-4 rounded-lg items-center gap-8 ">
           <svg
             width="18"
@@ -141,6 +209,7 @@ const Header = () => {
             class="w-full focus:outline-none h-14 bg-[#F2F2F2] rounded-lg px-4 text-base placeholder:italic"
             type="text"
             placeholder="Find your perfect food match"
+            onChange={(event)=>handleSearch(event)}
           />
         </div>
       </div>

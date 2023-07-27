@@ -10,15 +10,18 @@ const DataProvider = ({ children }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [outlets , setOutlets] = useState([]);
   const [open, setOpen] = useState(false);
+  const [searchResult, setSearchResult] = useState([]);
   
   useEffect(()=>{
-    console.log("i am running sir")
+    // console.log("i am running sir")
    if(!localStorage.getItem("lat") || !localStorage.getItem("lon") || !localStorage.getItem("address") ) 
     {
      setOpen(true);
     }
     
   },[address])
+
+
 
   return (
     <DataContext.Provider
@@ -30,7 +33,9 @@ const DataProvider = ({ children }) => {
         outlets,
         setOutlets,
         open,
-        setOpen
+        setOpen,
+        searchResult,
+        setSearchResult
       }}
     >
       {children}
