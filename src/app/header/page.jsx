@@ -1,30 +1,29 @@
-import React, {useEffect, useState,useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { DataContext } from "../context/page";
 import { decryptData } from "@/utils/crypto";
+import { formatString } from "@/utils/formatString";
 
-function formatString(str , len) {
-  if ( str && str.length >= len ){
-    return str.substr(0, 14) + '..';
-  } else {
-    return str;
-  }
-}
 
 const Header = () => {
-  const { address ,outlets,setOutlets,setCity,suggestions,setSearchResult,searchResult, setOpen} = useContext(DataContext);
+  const {
+    address,
+    outlets,
+    setOutlets,
+    setCity,
+    suggestions,
+    setSearchResult,
+    searchResult,
+    setOpen,
+  } = useContext(DataContext);
   const [searchQuery, setSearchQuery] = useState("");
- 
+
   useEffect(() => {
-    // This useEffect will be called whenever 'outlets' changes
-    console.log("outlets is ", outlets);
     setSearchResult([...outlets]);
-    console.log("searchResult is ", searchResult);
   }, [outlets]);
 
-  useEffect(()=>{
-    if(decryptData("city"))
-     setCity(decryptData("city"));
-  },[])
+  useEffect(() => {
+    if (decryptData("city")) setCity(decryptData("city"));
+  }, []);
 
   const handleSearch = (e) => {
     const query = e.target.value;
@@ -43,57 +42,7 @@ const Header = () => {
   };
 
   let local_lat = decryptData("lat"),
-    local_long =   decryptData("lon");
-
-  // function getLocation() {
-  //   console.log("location service called");
-  //   navigator.geolocation.getCurrentPosition((pos) => {
-  //     const { latitude, longitude } = pos.coords;
-  //     localStorage.setItem("lat", latitude);
-  //     localStorage.setItem("lon", longitude);
-  //     console.log(latitude, longitude);
-  //     const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&type=postcode&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`;
-  //     fetch(url)
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log("res",data.results[0].county,data.results[0].state)
-  //         localStorage.setItem('address',data.results[0].county+' '+data.results[0].state)
-  //         setAddress(data.results[0].county+' '+data.results[0].state)
-  //         //setAddress(data.address)
-  //       });
-  //   });
-  // }
-
-  // useEffect(() => {
-  //   // if (!local_lat && !local_long) getLocation();
-  //   setAddress(localStorage.getItem("address"));
-  // }, [address]);
-
-  // Function to handle city auto-suggestion
-  // const suggestCities = (cityInput) => {
-  //   fetch(
-  //     `https://api.geoapify.com/v1/geocode/search?text=${cityInput}%20%20Layout&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`
-  //   )
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("data", data.results[0]);
-
-  //       // Extract latitude, longitude, and city names and store them in the state
-  //       setSuggestions(
-  //         data.results.map((city) => {
-  //           return {
-  //             formatted: city.address_line1+' '+city.county,
-  //             lat: city.lat,
-  //             lon: city.lon,
-  //             city: city.city ? city.city : city.formatted, // Use city field if available, otherwise use formatted field
-  //           };
-  //         })
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching city suggestions:", error);
-  //     });
-  // };
+    local_long = decryptData("lon");
 
   const handleInputLocation = () => {
     localStorage.removeItem("latitude");
@@ -101,49 +50,21 @@ const Header = () => {
     getLocation();
   };
 
-  /*{false && (
-        <>
-          {console.log(local_lat, local_long)}
-          <input
-            type="text"
-            placeholder="Enter Location.."
-            onChange={(e) => suggestCities(e.target.value)}
-          />
-          <div>
-            {suggestions.map((city, index) => (
-              <div
-                key={index}
-                onClick={() =>
-                  handleSuggestionsClick(city.formatted, city.lat, city.lon)
-                }
-              >
-                {city.formatted}
-              </div>
-            ))}
-          </div>
-        </>
-      )} */
-
-  /* <div className="">
-                <img
-                  src={
-                    "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"
-                  }
-                />
-              </div> */
-
   return (
     <>
       <div className="sticky top-0 z-10 flex flex-col bg-white mt-0 pt-4 mb-3.5 pb-1 gap-4">
         <div className="flex justify-between">
-          <div >
+          <div>
             <div className="flex text-[#A7A7A7] font-Jost">Pickup Now</div>
             <div className="flex gap-2">
-              <div className="text-base font-semibold">{formatString(address,16)}</div>
-              <div onClick={()=>{
-                
-                setOpen(true)
-              }}>
+              <div className="text-base font-semibold">
+                {formatString(address, 16)}
+              </div>
+              <div
+                onClick={() => {
+                  setOpen(true);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
@@ -161,45 +82,15 @@ const Header = () => {
               </div>
             </div>
           </div>
-          <div> 
-             <img src={ "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"}/>
-          </div>
-        </div>
-
-        {   /*<div className="flex flex-col">
-          <div className="flex text-[#A7A7A7] font-Jost">Pickup Now</div>
-          <div className="flex  text-black text-md font-Jost">
-            <div className="flex justify-between w-full">
-              <div className="flex gap-1">
-                <div className="text-base font-semibold">{address}</div>
-                <div className="">
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <g mask="url(#mask0_2_211)">
-                      <path
-                        d="M12 14.95C11.8667 14.95 11.7417 14.9292 11.625 14.8875C11.5084 14.8458 11.4 14.775 11.3 14.675L6.67503 10.05C6.4917 9.86667 6.4042 9.63751 6.41253 9.36251C6.42086 9.08751 6.5167 8.85834 6.70003 8.67501C6.88336 8.49167 7.1167 8.40001 7.40003 8.40001C7.68336 8.40001 7.9167 8.49167 8.10003 8.67501L12 12.575L15.925 8.65001C16.1084 8.46667 16.3375 8.37917 16.6125 8.38751C16.8875 8.39584 17.1167 8.49167 17.3 8.67501C17.4834 8.85834 17.575 9.09167 17.575 9.37501C17.575 9.65834 17.4834 9.89167 17.3 10.075L12.7 14.675C12.6 14.775 12.4917 14.8458 12.375 14.8875C12.2584 14.9292 12.1334 14.95 12 14.95Z"
-                        fill="#10100E"
-                      />
-                    </g>
-                  </svg>
-                </div>
-              </div>
-  </div>
-          </div>
-
-          <div className="">
+          <div>
             <img
               src={
                 "https://order.zingnow.in/assets/webapp/logos/orangeShort.svg"
               }
             />
           </div>
-        </div>*/}
+        </div>
+
         <div className="flex bg-[#F2F2F2] pl-4 rounded-lg items-center gap-8 ">
           <svg
             width="18"
@@ -218,7 +109,7 @@ const Header = () => {
             className="w-full focus:outline-none h-14 bg-[#F2F2F2] rounded-lg px-4 text-base placeholder:italic"
             type="text"
             placeholder="Find your perfect food match"
-            onChange={(event)=>handleSearch(event)}
+            onChange={(event) => handleSearch(event)}
           />
         </div>
       </div>

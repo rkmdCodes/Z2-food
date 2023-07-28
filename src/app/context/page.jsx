@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { createContext, useState , useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { decryptData } from "@/utils/crypto";
 
 export const DataContext = createContext(null);
@@ -9,21 +9,17 @@ export const DataContext = createContext(null);
 const DataProvider = ({ children }) => {
   const [address, setAddress] = useState(decryptData("address"));
   const [suggestions, setSuggestions] = useState([]);
-  const [outlets , setOutlets] = useState([]);
+  const [outlets, setOutlets] = useState([]);
   const [open, setOpen] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
   const [error, setError] = useState("");
-  const [city , setCity] = useState("Ua2yAysHWwSA20ysf5ye");
-  
-  useEffect(()=>{
-   if(!decryptData("lat") || !decryptData("lon") || !decryptData("address") ) 
-    {
-     setOpen(true);
+  const [city, setCity] = useState("Ua2yAysHWwSA20ysf5ye");
+
+  useEffect(() => {
+    if (!decryptData("lat") || !decryptData("lon") || !decryptData("address")) {
+      setOpen(true);
     }
-    
-  },[address])
-
-
+  }, [address]);
 
   return (
     <DataContext.Provider
@@ -41,8 +37,7 @@ const DataProvider = ({ children }) => {
         error,
         setError,
         city,
-        setCity
-
+        setCity,
       }}
     >
       {children}

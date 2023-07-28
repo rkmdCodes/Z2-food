@@ -1,13 +1,5 @@
 import React from "react";
-
-function formatString(str, len) {
-  if (str && str.length >= len) {
-    return str.substr(0, 17) + "...";
-  } else {
-    return str;
-  }
-}
-
+import { formatString } from "@/utils/formatString";
 
 const Outlet = ({ imgUrl, name, distance, cuisine }) => {
   distance = distance?.toFixed(1) + " km";

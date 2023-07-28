@@ -5,10 +5,9 @@ import { Modal } from "react-responsive-modal";
 import "../modal2/modal2.css";
 import { DataContext } from "../context/page";
 import { encryptAndSaveData, decryptData } from "@/utils/crypto";
-import Img from "@/app/output-onlinepngtools.png";
 
 const Modal2 = () => {
-  const { address, setAddress ,setCity } = useContext(DataContext);
+  const { address, setAddress, setCity } = useContext(DataContext);
   const { open, setOpen, error, setError } = useContext(DataContext);
 
   const { suggestions, setSuggestions } = useContext(DataContext);
@@ -26,7 +25,7 @@ const Modal2 = () => {
     setError("");
   }, []);
   const suggestCities = (cityInput) => {
-    console.log("cityinput inside suggestcities", cityInput);
+   
 
     try {
       fetch(
@@ -37,13 +36,13 @@ const Modal2 = () => {
           // Extract latitude, longitude, and city names and store them in the state
           setSuggestions(
             data.results.map((city) => {
-              console.log("inside results map -> city.city", city.city);
+             
 
               return {
                 formatted: city.address_line1 + " " + city.county,
                 lat: city.lat,
                 lon: city.lon,
-                city: city.city, // Use city field if available, otherwise use formatted field
+                city: city.city,
               };
             })
           );
@@ -54,19 +53,19 @@ const Modal2 = () => {
   };
 
   async function getLocation() {
-    console.log("getlocation called");
+   
     await navigator.geolocation.getCurrentPosition((pos) => {
       const { latitude, longitude } = pos.coords;
 
-      console.log(latitude, longitude);
+      
       encryptAndSaveData("lat", latitude);
       encryptAndSaveData("lon", longitude);
 
       const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&type=city&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`;
-       fetch(url)
+      fetch(url)
         .then((res) => res.json())
         .then((data) => {
-          encryptAndSaveData("city",data?.results[0].city)
+          encryptAndSaveData("city", data?.results[0].city);
           setCity(data?.results[0].city);
           encryptAndSaveData(
             "address",
@@ -85,15 +84,12 @@ const Modal2 = () => {
         });
     });
     setOpen(false);
-   
-    
   }
 
   const handleSuggestionsClick = (address, lat, lon, city) => {
-    console.log("lat and lon = ", lat, lon);
-    console.log("city from click is = ", city);
+
     setCity(city);
-    encryptAndSaveData("city",city)
+    encryptAndSaveData("city", city);
     encryptAndSaveData("lat", lat);
     encryptAndSaveData("lon", lon);
     encryptAndSaveData("address", address);
@@ -104,7 +100,6 @@ const Modal2 = () => {
 
   return (
     <div>
-      {/* <button onClick={onOpenModal}>Open modal</button> */}
       <Modal
         open={open}
         onClose={onCloseModal}

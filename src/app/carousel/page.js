@@ -2,10 +2,9 @@ import React from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 
-const Carousl  = () => {
+const Carousl = () => {
   return (
     <div className="relative ">
-      {/* The Carousel component */}
       <Carousel
         className="h-207px"
         autoPlay={true}
@@ -32,4 +31,4 @@ const Carousl  = () => {
   );
 };
 
-export default Carousl ;
+export default Carousl;
