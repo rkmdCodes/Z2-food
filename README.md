@@ -15,6 +15,7 @@
 - Vercel
 - Geopify API
 - Git/ Github
+- crypto.js 
 
 ## Visual Flow
 
