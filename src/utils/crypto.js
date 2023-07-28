@@ -7,12 +7,26 @@ export function encryptAndSaveData(key, data) {
     JSON.stringify(data),
     secretKey
   ).toString();
-  localStorage.setItem(key, encryptedData);
+
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    localStorage.setItem(key, encryptedData);
+  }
+
+  
 }
 
 export function decryptData(key) {
   const secret = "asffydcfgcfjcyhvfyhvfghvsdf";
-  const encryptedData = localStorage.getItem(key);
+   
+  let encryptedData = "";
+  if (typeof window !== 'undefined') {
+    // Perform localStorage action
+    encryptedData = localStorage.getItem(key);
+  }
+
+
+  
   if (encryptedData) {
     const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, secret);
     const decryptedData = JSON.parse(

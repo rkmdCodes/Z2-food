@@ -9,9 +9,9 @@ import Outlets from "../outlets/page";
 import { fetchData } from "@/firebase/queries";
 
 const Container = () => {
-  const {setOutlets, setSearchResult, city } = useContext(DataContext);
-  const { address } = useContext(DataContext);
-  let buttonRef = doc(db, "outlet", city);
+  const {address,setOutlets, setSearchResult, city } = useContext(DataContext) ?? {};
+
+  let buttonRef = doc(db, "outlet", city?city:"Ua2yAysHWwSA20ysf5ye");
 
   useEffect(() => {
     fetchData(buttonRef, setOutlets);

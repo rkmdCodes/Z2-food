@@ -1,6 +1,6 @@
 "use client";
-import React, {useContext, useEffect } from "react";
-
+import React, { useState, useContext, useEffect } from "react";
+import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { getLocation, suggestCities } from "@/mapApi/api";
 import "./modal2.css";
@@ -8,10 +8,8 @@ import { DataContext } from "../context/page";
 import { encryptAndSaveData, decryptData } from "@/utils/crypto";
 
 const Modal2 = () => {
-  const { address, setAddress, setCity } = useContext(DataContext);
-  const { open, setOpen, error, setError } = useContext(DataContext);
+  const { address, setAddress, setCity,open, setOpen, error, setError ,suggestions, setSuggestions } = useContext(DataContext) ?? {};
 
-  const { suggestions, setSuggestions } = useContext(DataContext);
   const onOpenModal = () => setOpen(true);
 
 
@@ -115,19 +113,19 @@ const Modal2 = () => {
                 }
               />
             </div>
-            {suggestions.map((city, index) => (
+            {suggestions?.map((city, index) => (
               <div
                 key={index}
                 onClick={() =>
                   handleSuggestionsClick(
-                    city.formatted,
-                    city.lat,
-                    city.lon,
-                    city.city
+                    city?.formatted,
+                    city?.lat,
+                    city?.lon,
+                    city?.city
                   )
                 }
               >
-                {city.formatted}
+                {city?.formatted}
               </div>
             ))}
           </div>

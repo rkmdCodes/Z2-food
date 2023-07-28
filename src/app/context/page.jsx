@@ -7,7 +7,7 @@ import { decryptData } from "@/utils/crypto";
 export const DataContext = createContext(null);
 
 const DataProvider = ({ children }) => {
-  const [address, setAddress] = useState(decryptData("address"));
+  const [address, setAddress] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [outlets, setOutlets] = useState([]);
   const [open, setOpen] = useState(false);
@@ -16,10 +16,15 @@ const DataProvider = ({ children }) => {
   const [city, setCity] = useState("Ua2yAysHWwSA20ysf5ye");
 
   useEffect(() => {
+  
+   setAddress(decryptData("address"))    
     if (!decryptData("lat") || !decryptData("lon") || !decryptData("address")) {
       setOpen(true);
+     
     }
   }, [address]);
+
+
 
   return (
     <DataContext.Provider

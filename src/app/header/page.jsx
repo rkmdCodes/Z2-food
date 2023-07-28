@@ -4,6 +4,7 @@ import { DataContext } from "../context/page";
 import { decryptData } from "@/utils/crypto";
 import { formatString } from "@/utils/formatString";
 const Header = () => {
+
   const {
     address,
     outlets,
@@ -14,7 +15,7 @@ const Header = () => {
     searchResult,
     setOpen,
     error
-  } = useContext(DataContext);
+  } = useContext(DataContext) ?? {};
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {

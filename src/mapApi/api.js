@@ -10,6 +10,7 @@ export async function getLocation(
 ) {
   if (!navigator.geolocation) {
     setError("Please Enable Location Permission.");
+
     setOpen(false);
     return;
   }
