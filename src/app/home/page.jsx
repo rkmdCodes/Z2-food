@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useContext, useEffect } from "react";
 import Header from "../header/page";
 import { db } from "@/firebase/firebase";
