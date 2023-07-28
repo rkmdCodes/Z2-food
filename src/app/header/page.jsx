@@ -12,6 +12,7 @@ const Header = () => {
     setSearchResult,
     searchResult,
     setOpen,
+    error
   } = useContext(DataContext);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -49,7 +50,7 @@ const Header = () => {
   };
 
   return (
-    <>
+    <> 
       <div className="sticky top-0 z-10 flex flex-col bg-white mt-0 pt-4 mb-3.5 pb-1 gap-4">
         <div className="flex justify-between">
           <div>
@@ -89,7 +90,7 @@ const Header = () => {
           </div>
         </div>
 
-        <div className="flex bg-[#F2F2F2] pl-4 rounded-lg items-center gap-8 ">
+        <div className="flex bg-[#F2F2F2] pl-4 rounded-lg items-center gap-2 ">
           <svg
             width="18"
             height="18"

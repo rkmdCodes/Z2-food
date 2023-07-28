@@ -13,7 +13,7 @@ const Modal2 = () => {
 
   const { suggestions, setSuggestions } = useContext(DataContext);
   const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => setOpen(false);
+
 
   useEffect(() => {
     if (decryptData("lat")) {
@@ -27,6 +27,7 @@ const Modal2 = () => {
 
   const handleSuggestionsClick = (address, lat, lon, city) => {
     setCity(city);
+    setError("");
     encryptAndSaveData("city", city);
     encryptAndSaveData("lat", lat);
     encryptAndSaveData("lon", lon);
@@ -36,11 +37,15 @@ const Modal2 = () => {
     setOpen(false);
   };
 
+  const handleGrantButtonClick = ()=>{
+    localStorage.clear();
+    getLocation(address, setCity, setAddress, setOpen, setError)
+  }
+
   return (
     <div>
       <Modal
         open={open}
-        onClose={onCloseModal}
         focusTrapped={false}
         center
         showCloseIcon={false}
@@ -68,22 +73,24 @@ const Modal2 = () => {
                 <h2 className="text-[#F36C21] font-medium">Enable Location</h2>
               </div>
               <button
-                onClick={() =>
-                  getLocation(address, setCity, setAddress, setOpen, setError)
-                }
+                onClick={() =>handleGrantButtonClick()}
                 className="bg-black text-white py-1 px-4 rounded-md"
               >
                 Grant
               </button>
             </div>
             <div className="flex text-[#A7A7A7] text-sm">
-              <p>{}</p>
-              Granting location will permit us to store and ensure accurate
-              address
+              <div className="flex flex-col gap-1">
+              <p className="text-black">{error}</p>
+              <p>Granting location will permit us to store and ensure accurate
+              address</p>
+              </div>
+              
+              
             </div>
           </div>
-          <div className="w-full bg-white">
-            <div className="flex  w-full items-center bg-white  ">
+          <div className="w-full rounded-lg bg-white">
+            <div className="flex rounded-lg  w-full items-center bg-white  ">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -100,11 +107,11 @@ const Modal2 = () => {
                 ></path>
               </svg>
               <input
-                className="w-full focus:outline-none h-14  px-4 text-base "
+                className="w-full focus:outline-none h-14  px-4  "
                 type="text"
                 placeholder="Enter Location Manually"
                 onChange={(event) =>
-                  suggestCities(event.target.value, setSuggestions)
+                  suggestCities(event.target.value, setSuggestions,setError)
                 }
               />
             </div>

@@ -6,7 +6,7 @@ const Outlet = ({ imgUrl, name, distance, cuisine }) => {
   return (
     <div className="flex flex-col gap-2 ">
       <div className="flex max-h-40 min-h-40 w-full ">
-        <img  className="rounded-lg object-cover h-full w-full" src={imgUrl} />
+        <img  className="block object-cover rounded-lg object-cover h-full w-full" src={imgUrl} />
       </div>
       <div>
         <div className="font-semibold text-base">{formatString(name, 20)}</div>

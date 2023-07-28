@@ -8,21 +8,17 @@ const Outlets = () => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex items-center justify-between py-3 gap-0">
-          <div className="w-10">
-            <hr />
-          </div>
+        <div className="flex items-center justify-center text-base py-3 gap-0">
+          
           <div>
             <p className="text-xs py-2 tracking-[.3rem] text-[#A7A7A7]">
-              {outlets.length} RESTAURANTS NEAR YOU
+              {searchResult.length} RESTAURANTS NEAR YOU
             </p>
           </div>
-          <div className="w-10">
-            <hr />
-          </div>
+          
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 auto-rows-max gap-4">
           {searchResult?.map((outlet) => (
             <Outlet
             key={outlet.id}
