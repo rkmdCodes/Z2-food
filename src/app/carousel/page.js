@@ -25,7 +25,6 @@ const Carousl = () => {
         </div>
       </Carousel>
 
-      {/* Element with backdrop blur */}
       <div className=""></div>
     </div>
   );

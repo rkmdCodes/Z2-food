@@ -2,7 +2,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
-import "../modal2/modal2.css";
+import { getLocation, suggestCities } from "@/mapApi/api";
+import "./modal2.css";
 import { DataContext } from "../context/page";
 import { encryptAndSaveData, decryptData } from "@/utils/crypto";
 
@@ -11,7 +12,6 @@ const Modal2 = () => {
   const { open, setOpen, error, setError } = useContext(DataContext);
 
   const { suggestions, setSuggestions } = useContext(DataContext);
-
   const onOpenModal = () => setOpen(true);
   const onCloseModal = () => setOpen(false);
 
@@ -24,70 +24,8 @@ const Modal2 = () => {
   useEffect(() => {
     setError("");
   }, []);
-  const suggestCities = (cityInput) => {
-   
-
-    try {
-      fetch(
-        `https://api.geoapify.com/v1/geocode/search?text=${cityInput}%20%20Layout&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          // Extract latitude, longitude, and city names and store them in the state
-          setSuggestions(
-            data.results.map((city) => {
-             
-
-              return {
-                formatted: city.address_line1 + " " + city.county,
-                lat: city.lat,
-                lon: city.lon,
-                city: city.city,
-              };
-            })
-          );
-        });
-    } catch (error) {
-      alert("not enabled");
-    }
-  };
-
-  async function getLocation() {
-   
-    await navigator.geolocation.getCurrentPosition((pos) => {
-      const { latitude, longitude } = pos.coords;
-
-      
-      encryptAndSaveData("lat", latitude);
-      encryptAndSaveData("lon", longitude);
-
-      const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&type=city&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`;
-      fetch(url)
-        .then((res) => res.json())
-        .then((data) => {
-          encryptAndSaveData("city", data?.results[0].city);
-          setCity(data?.results[0].city);
-          encryptAndSaveData(
-            "address",
-            data.results[0].county + " " + data.results[0].state
-          );
-          setAddress(data.results[0].county + " " + data.results[0].state);
-
-          if (address) {
-            setError("Please Enable location Permission");
-
-            setOpen(false);
-          } else {
-            setError("");
-            setOpen(true);
-          }
-        });
-    });
-    setOpen(false);
-  }
 
   const handleSuggestionsClick = (address, lat, lon, city) => {
-
     setCity(city);
     encryptAndSaveData("city", city);
     encryptAndSaveData("lat", lat);
@@ -130,7 +68,9 @@ const Modal2 = () => {
                 <h2 className="text-[#F36C21] font-medium">Enable Location</h2>
               </div>
               <button
-                onClick={() => getLocation()}
+                onClick={() =>
+                  getLocation(address, setCity, setAddress, setOpen, setError)
+                }
                 className="bg-black text-white py-1 px-4 rounded-md"
               >
                 Grant
@@ -163,7 +103,9 @@ const Modal2 = () => {
                 className="w-full focus:outline-none h-14  px-4 text-base "
                 type="text"
                 placeholder="Enter Location Manually"
-                onChange={(event) => suggestCities(event.target.value)}
+                onChange={(event) =>
+                  suggestCities(event.target.value, setSuggestions)
+                }
               />
             </div>
             {suggestions.map((city, index) => (

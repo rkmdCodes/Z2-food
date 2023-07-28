@@ -2,8 +2,6 @@ import React, { useEffect, useState, useContext } from "react";
 import { DataContext } from "../context/page";
 import { decryptData } from "@/utils/crypto";
 import { formatString } from "@/utils/formatString";
-
-
 const Header = () => {
   const {
     address,
