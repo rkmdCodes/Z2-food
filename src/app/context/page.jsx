@@ -2,19 +2,21 @@
 
 import React from "react";
 import { createContext, useState , useEffect } from "react";
+import { decryptData } from "@/utils/crypto";
 
 export const DataContext = createContext(null);
 
 const DataProvider = ({ children }) => {
-  const [address, setAddress] = useState(localStorage.getItem("address"));
+  const [address, setAddress] = useState(decryptData("address"));
   const [suggestions, setSuggestions] = useState([]);
   const [outlets , setOutlets] = useState([]);
   const [open, setOpen] = useState(false);
   const [searchResult, setSearchResult] = useState([]);
+  const [error, setError] = useState("");
+  const [city , setCity] = useState("Ua2yAysHWwSA20ysf5ye");
   
   useEffect(()=>{
-    // console.log("i am running sir")
-   if(!localStorage.getItem("lat") || !localStorage.getItem("lon") || !localStorage.getItem("address") ) 
+   if(!decryptData("lat") || !decryptData("lon") || !decryptData("address") ) 
     {
      setOpen(true);
     }
@@ -35,7 +37,12 @@ const DataProvider = ({ children }) => {
         open,
         setOpen,
         searchResult,
-        setSearchResult
+        setSearchResult,
+        error,
+        setError,
+        city,
+        setCity
+
       }}
     >
       {children}

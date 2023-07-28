@@ -4,11 +4,12 @@ import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import "../modal2/modal2.css";
 import { DataContext } from "../context/page";
+import { encryptAndSaveData, decryptData } from "@/utils/crypto";
 import Img from "@/app/output-onlinepngtools.png";
 
 const Modal2 = () => {
-  const { address, setAddress } = useContext(DataContext);
-  const { open, setOpen } = useContext(DataContext);
+  const { address, setAddress ,setCity } = useContext(DataContext);
+  const { open, setOpen, error, setError } = useContext(DataContext);
 
   const { suggestions, setSuggestions } = useContext(DataContext);
 
@@ -16,68 +17,86 @@ const Modal2 = () => {
   const onCloseModal = () => setOpen(false);
 
   useEffect(() => {
-    if (localStorage.getItem("lat")) {
+    if (decryptData("lat")) {
       setOpen(false);
     }
   }, [address]);
 
+  useEffect(() => {
+    setError("");
+  }, []);
   const suggestCities = (cityInput) => {
-    fetch(
-      `https://api.geoapify.com/v1/geocode/search?text=${cityInput}%20%20Layout&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        // Extract latitude, longitude, and city names and store them in the state
-        setSuggestions(
-          data.results.map((city) => {
-            return {
-              formatted: city.address_line1 + " " + city.county,
-              lat: city.lat,
-              lon: city.lon,
-              city: city.city ? city.city : city.formatted, // Use city field if available, otherwise use formatted field
-            };
-          })
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching city suggestions:", error);
-      });
+    console.log("cityinput inside suggestcities", cityInput);
+
+    try {
+      fetch(
+        `https://api.geoapify.com/v1/geocode/search?text=${cityInput}%20%20Layout&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          // Extract latitude, longitude, and city names and store them in the state
+          setSuggestions(
+            data.results.map((city) => {
+              console.log("inside results map -> city.city", city.city);
+
+              return {
+                formatted: city.address_line1 + " " + city.county,
+                lat: city.lat,
+                lon: city.lon,
+                city: city.city, // Use city field if available, otherwise use formatted field
+              };
+            })
+          );
+        });
+    } catch (error) {
+      alert("not enabled");
+    }
   };
 
-  function getLocation() {
-    navigator.geolocation.getCurrentPosition((pos) => {
+  async function getLocation() {
+    console.log("getlocation called");
+    await navigator.geolocation.getCurrentPosition((pos) => {
       const { latitude, longitude } = pos.coords;
 
-      localStorage.setItem("lat", latitude);
-      localStorage.setItem("lon", longitude);
+      console.log(latitude, longitude);
+      encryptAndSaveData("lat", latitude);
+      encryptAndSaveData("lon", longitude);
 
-      const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&type=postcode&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`;
-      fetch(url)
+      const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&type=city&format=json&apiKey=2d8ae19550a2402fae6668a2e2311cd1`;
+       fetch(url)
         .then((res) => res.json())
-        .then(
-          (data) => {
-            localStorage.setItem(
-              "address",
-              data.results[0].county + " " + data.results[0].state
-            );
-            setAddress(data.results[0].county + " " + data.results[0].state);
+        .then((data) => {
+          encryptAndSaveData("city",data?.results[0].city)
+          setCity(data?.results[0].city);
+          encryptAndSaveData(
+            "address",
+            data.results[0].county + " " + data.results[0].state
+          );
+          setAddress(data.results[0].county + " " + data.results[0].state);
 
-            if (!address) setOpen(false);
-            else {
-              alert(`${address}`);
-            }
-          },
-          (error) => {
-            alert(error.message);
+          if (address) {
+            setError("Please Enable location Permission");
+
+            setOpen(false);
+          } else {
+            setError("");
+            setOpen(true);
           }
-        );
+        });
     });
+    setOpen(false);
+   
+    
   }
 
-  const handleSuggestionsClick = (address, lat, lon) => {
-    localStorage.setItem("lat", lat);
-    localStorage.setItem("lon", lon);
-    localStorage.setItem("address", address);
+  const handleSuggestionsClick = (address, lat, lon, city) => {
+    console.log("lat and lon = ", lat, lon);
+    console.log("city from click is = ", city);
+    setCity(city);
+    encryptAndSaveData("city",city)
+    encryptAndSaveData("lat", lat);
+    encryptAndSaveData("lon", lon);
+    encryptAndSaveData("address", address);
     setAddress(address);
     setSuggestions([]);
     setOpen(false);
@@ -105,7 +124,7 @@ const Modal2 = () => {
                   fill="#F36C21"
                   strokeWidth="0"
                   viewBox="0 0 24 24"
-                  class="w-5 h-5"
+                  className="w-5 h-5"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -123,6 +142,7 @@ const Modal2 = () => {
               </button>
             </div>
             <div className="flex text-[#A7A7A7] text-sm">
+              <p>{}</p>
               Granting location will permit us to store and ensure accurate
               address
             </div>
@@ -133,19 +153,19 @@ const Modal2 = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5 text-zing-dgrey"
+                className="w-5 h-5 text-zing-dgrey"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
                 ></path>
               </svg>
               <input
-                class="w-full focus:outline-none h-14  px-4 text-base "
+                className="w-full focus:outline-none h-14  px-4 text-base "
                 type="text"
                 placeholder="Enter Location Manually"
                 onChange={(event) => suggestCities(event.target.value)}
@@ -155,7 +175,12 @@ const Modal2 = () => {
               <div
                 key={index}
                 onClick={() =>
-                  handleSuggestionsClick(city.formatted, city.lat, city.lon)
+                  handleSuggestionsClick(
+                    city.formatted,
+                    city.lat,
+                    city.lon,
+                    city.city
+                  )
                 }
               >
                 {city.formatted}

@@ -8,7 +8,7 @@ const Outlets = () => {
   return (
     <>
       <div className="flex flex-col">
-        <div className="flex items-center justify-between py-3">
+        <div className="flex items-center justify-between py-3 gap-0">
           <div className="w-10">
             <hr />
           </div>
@@ -21,11 +21,12 @@ const Outlets = () => {
             <hr />
           </div>
         </div>
-        {console.log("search result is = ",searchResult)}
+        
         <div className="grid grid-cols-2 gap-4">
           {searchResult?.map((outlet) => (
             <Outlet
-              imgUrl={"https://images.pexels.com/photos/699953/pexels-photo-699953.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}
+            key={outlet.id}
+              imgUrl={outlet.imageUrl}
               name={outlet?.name}
               distance={outlet?.distance}
               cuisine={outlet?.cuisine}

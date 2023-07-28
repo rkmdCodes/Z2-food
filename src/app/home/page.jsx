@@ -11,6 +11,7 @@ import { encryptAndSaveData ,decryptData } from "@/utils/crypto";
 
 const api_key = "181256ee-689d-41bb-960c-75cad0c4644f";
 async function getDistance(lat1, lon1, lat2, lon2) {
+  
   const base_url = `https://graphhopper.com/api/1/route?point=${lat1},${lon1}&point=${lat2},${lon2}&vehicle=car&locale=en&key=${api_key}`;
   const response = await fetch(base_url);
   const data = await response.json();
@@ -22,12 +23,17 @@ async function getDistance(lat1, lon1, lat2, lon2) {
 
 
 const Container = () => {
-  const {outlets , setOutlets,setSeachResult} = useContext(DataContext);
+  const {outlets , setOutlets,setSearchResult,city} = useContext(DataContext);
   const {address}  = useContext(DataContext);
-  let lat = localStorage.getItem("lat");
-  let lon = localStorage.getItem("lon");
-  const buttonRef = doc(db, 'outlet', 'Delhi');
+  
 
+
+  let lat = decryptData("lat");
+  let lon = decryptData("lon");
+  
+  let buttonRef = doc(db, 'outlet', city);
+  console.log(" city in container is  ", city);
+ 
 
   const fetchData = async () => {
     // console.log("fetch data is called");
@@ -36,9 +42,9 @@ const Container = () => {
       if (docSnapshot.exists()) {
         console.log("firebase result = ",docSnapshot.data())
         const da = docSnapshot.data().Res1;
-        // console.log("da is = ", da);
+         console.log("da for ",city ," is ", da);
         let filteredData = [];
-        for (var i = 0; i < da.length; i++) {
+        for (var i = 0; i < da?.length; i++) {
           
           let distanceBet = await getDistance(lat, lon, da[i].lat, da[i].long);
          
@@ -51,12 +57,17 @@ const Container = () => {
         setOutlets(()=>[...filteredData]); // Update the state with the filtered data here
 
       } else {
-        
+         console.log("not exixts");
       }
     } catch (error) {
       console.error('Error fetching button data:', error);
     }
   };
+
+  useEffect(()=>{
+    fetchData();
+    setSearchResult([]);
+  },[city])
 
   useEffect(()=>{
     fetchData();
@@ -91,15 +102,13 @@ const Container = () => {
   ></input>
       <button onClick={()=>fetchData()}>Add</button>
     </>*/
-    encryptAndSaveData("aakarshan");
-    console.log(localStorage.getItem("encryptedData"));
-    console.log(decryptData())
+
   return (
-    <div className="m-1.5 font-Jost tracking-widest">
+    <div className="m-2 font-Jost tracking-widest">
        <Header/>
        <Carousl/>
        <Outlets/>
-       <button onClick={()=>fetchData()}> Fetch</button>
+       
     </div>
   );
 };

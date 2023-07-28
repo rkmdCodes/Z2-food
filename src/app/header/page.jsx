@@ -1,5 +1,6 @@
 import React, {useEffect, useState,useContext } from "react";
 import { DataContext } from "../context/page";
+import { decryptData } from "@/utils/crypto";
 
 function formatString(str , len) {
   if ( str && str.length >= len ){
@@ -10,7 +11,7 @@ function formatString(str , len) {
 }
 
 const Header = () => {
-  const { address ,outlets,setOutlets,suggestions,setSearchResult,searchResult, setOpen} = useContext(DataContext);
+  const { address ,outlets,setOutlets,setCity,suggestions,setSearchResult,searchResult, setOpen} = useContext(DataContext);
   const [searchQuery, setSearchQuery] = useState("");
  
   useEffect(() => {
@@ -19,6 +20,11 @@ const Header = () => {
     setSearchResult([...outlets]);
     console.log("searchResult is ", searchResult);
   }, [outlets]);
+
+  useEffect(()=>{
+    if(decryptData("city"))
+     setCity(decryptData("city"));
+  },[])
 
   const handleSearch = (e) => {
     const query = e.target.value;
@@ -36,8 +42,8 @@ const Header = () => {
     setSearchResult(filteredOutlets);
   };
 
-  let local_lat = localStorage.getItem("lat"),
-    local_long = localStorage.getItem("lon");
+  let local_lat = decryptData("lat"),
+    local_long =   decryptData("lon");
 
   // function getLocation() {
   //   console.log("location service called");
@@ -134,7 +140,10 @@ const Header = () => {
             <div className="flex text-[#A7A7A7] font-Jost">Pickup Now</div>
             <div className="flex gap-2">
               <div className="text-base font-semibold">{formatString(address,16)}</div>
-              <div onClick={()=>setOpen(true)}>
+              <div onClick={()=>{
+                
+                setOpen(true)
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -206,7 +215,7 @@ const Header = () => {
             />
           </svg>
           <input
-            class="w-full focus:outline-none h-14 bg-[#F2F2F2] rounded-lg px-4 text-base placeholder:italic"
+            className="w-full focus:outline-none h-14 bg-[#F2F2F2] rounded-lg px-4 text-base placeholder:italic"
             type="text"
             placeholder="Find your perfect food match"
             onChange={(event)=>handleSearch(event)}
