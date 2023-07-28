@@ -1,4 +1,5 @@
-import Image from 'next/image'
+"use client"
+
 import Container from './home/page'
 import Modal from './modal/page'
 import DataProvider from './context/page'

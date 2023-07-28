@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useContext, useEffect } from "react";
-import "react-responsive-modal/styles.css";
+import React, {useContext, useEffect } from "react";
+
 import { Modal } from "react-responsive-modal";
 import { getLocation, suggestCities } from "@/mapApi/api";
 import "./modal2.css";
