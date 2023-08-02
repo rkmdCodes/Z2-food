@@ -22,7 +22,7 @@ const Outlets = () => {
         <div className="grid grid-cols-2 auto-rows-max gap-4">
           {searchResult?.map((outlet) => (
             <Outlet
-            key={outlet?.id}
+              key={outlet?.id}
               imgUrl={outlet?.imageUrl}
               name={outlet?.name}
               distance={outlet?.distance}

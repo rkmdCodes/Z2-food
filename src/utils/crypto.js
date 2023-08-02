@@ -25,8 +25,6 @@ export function decryptData(key) {
     encryptedData = localStorage.getItem(key);
   }
 
-
-  
   if (encryptedData) {
     const decryptedBytes = CryptoJS.AES.decrypt(encryptedData, secret);
     const decryptedData = JSON.parse(

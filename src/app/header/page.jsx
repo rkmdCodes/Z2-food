@@ -16,6 +16,7 @@ const Header = () => {
     setOpen,
     error
   } = useContext(DataContext) ?? {};
+
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -25,6 +26,8 @@ const Header = () => {
   useEffect(() => {
     if (decryptData("city")) setCity(decryptData("city"));
   }, []);
+
+  
 
   const handleSearch = (e) => {
     const query = e.target.value;

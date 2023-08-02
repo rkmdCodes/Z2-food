@@ -1,6 +1,5 @@
 import { encryptAndSaveData } from "@/utils/crypto";
 
-
 export async function getLocation(
   address,
   setCity,
@@ -62,6 +61,7 @@ export async function getLocation(
     }
   }
 }
+
 
 export const suggestCities = (cityInput,setSuggestions,setError) => {
  

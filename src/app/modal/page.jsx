@@ -8,10 +8,19 @@ import { DataContext } from "../context/page";
 import { encryptAndSaveData, decryptData } from "@/utils/crypto";
 
 const Modal2 = () => {
-  const { address, setAddress, setCity,open, setOpen, error, setError ,suggestions, setSuggestions } = useContext(DataContext) ?? {};
+  const {
+    address,
+    setAddress,
+    setCity,
+    open,
+    setOpen,
+    error,
+    setError,
+    suggestions,
+    setSuggestions,
+  } = useContext(DataContext) ?? {};
 
   const onOpenModal = () => setOpen(true);
-
 
   useEffect(() => {
     if (decryptData("lat")) {
@@ -22,6 +31,8 @@ const Modal2 = () => {
   useEffect(() => {
     setError("");
   }, []);
+
+
 
   const handleSuggestionsClick = (address, lat, lon, city) => {
     setCity(city);
@@ -35,11 +46,14 @@ const Modal2 = () => {
     setOpen(false);
   };
 
-  const handleGrantButtonClick = ()=>{
-    localStorage.clear();
-    getLocation(address, setCity, setAddress, setOpen, setError)
-  }
 
+
+  const handleGrantButtonClick = () => {
+    localStorage.clear();
+    getLocation(address, setCity, setAddress, setOpen, setError);
+  };
+
+  
   return (
     <div>
       <Modal
@@ -71,7 +85,7 @@ const Modal2 = () => {
                 <h2 className="text-[#F36C21] font-medium">Enable Location</h2>
               </div>
               <button
-                onClick={() =>handleGrantButtonClick()}
+                onClick={() => handleGrantButtonClick()}
                 className="bg-black text-white py-1 px-4 rounded-md"
               >
                 Grant
@@ -79,12 +93,12 @@ const Modal2 = () => {
             </div>
             <div className="flex text-[#A7A7A7] text-sm">
               <div className="flex flex-col gap-1">
-              <p className="text-black">{error}</p>
-              <p>Granting location will permit us to store and ensure accurate
-              address</p>
+                <p className="text-black">{error}</p>
+                <p>
+                  Granting location will permit us to store and ensure accurate
+                  address
+                </p>
               </div>
-              
-              
             </div>
           </div>
           <div className="w-full rounded-lg bg-white">
@@ -109,7 +123,7 @@ const Modal2 = () => {
                 type="text"
                 placeholder="Enter Location Manually"
                 onChange={(event) =>
-                  suggestCities(event.target.value, setSuggestions,setError)
+                  suggestCities(event.target.value, setSuggestions, setError)
                 }
               />
             </div>

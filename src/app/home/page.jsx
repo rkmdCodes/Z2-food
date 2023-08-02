@@ -21,6 +21,8 @@ const Container = () => {
   useEffect(() => {
     fetchData(buttonRef, setOutlets);
   }, [address]);
+  
+  
 
   return (
     <div className="m-2 font-Jost tracking-widest">

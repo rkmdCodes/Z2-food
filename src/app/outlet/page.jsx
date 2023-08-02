@@ -3,10 +3,12 @@ import React from "react";
 import { formatString } from "@/utils/formatString";
 
 const Outlet = ({ imgUrl, name, distance, cuisine }) => {
+
   distance = distance?.toFixed(1) + " km";
+  
   return (
     <div className="flex flex-col gap-2 ">
-      <div className="flex max-h-40 min-h-40 w-full ">
+      <div className="flex min-h-40 max-h-40 w-full ">
         <img  className="block object-cover rounded-lg object-cover h-full w-full" src={imgUrl} />
       </div>
       <div>
